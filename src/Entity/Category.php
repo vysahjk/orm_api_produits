@@ -7,31 +7,39 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *    normalizationContext={"groups" : {"user_read_category"}}
+ * )
  * @ApiFilter(SearchFilter::class, properties={"nom" : "exact"})
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
 class Category extends AbstractEntity
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+  /**
+   * @ORM\Id()
+   * @ORM\GeneratedValue()
+   * @ORM\Column(type="integer")
+   * @Groups({"user_read_produit"})
+   * @Groups({"user_read_category"})
+   */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Groups({"user_read_produit"})
+   * @Groups({"user_read_category"})
+   */
     private $nom;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Produit", mappedBy="category")
-     */
+  /**
+   * @ORM\ManyToMany(targetEntity="App\Entity\Produit", mappedBy="category")
+   * @Groups({"user_read_category"})
+   */
     private $produits;
 
     public function __construct()

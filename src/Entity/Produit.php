@@ -7,42 +7,54 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *    normalizationContext={"groups" : {"user_read_produit"}}
+ * )
  * @ApiFilter(RangeFilter::class, properties={"prix"})
  * @ApiFilter(SearchFilter::class, properties={"nom": "ipartial"})
  * @ORM\Entity(repositoryClass="App\Repository\ProduitRepository")
  */
 class Produit extends AbstractEntity
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+  /**
+   * @ORM\Id()
+   * @ORM\GeneratedValue()
+   * @ORM\Column(type="integer")
+   * @Groups({"user_read_produit"})
+   * @Groups({"user_read_category"})
+   */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Groups({"user_read_produit"})
+   * @Groups({"user_read_category"})
+   */
     private $nom;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+  /**
+   * @ORM\Column(type="text")
+   * @Groups({"user_read_produit"})
+   * @Groups({"user_read_category"})
+   */
     private $description;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="produits")
-     */
+  /**
+   * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="produits")
+   * @Groups({"user_read_produit"})
+   */
     private $category;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+  /**
+   * @ORM\Column(type="float")
+   * @Groups({"user_read_produit"})
+   * @Groups({"user_read_category"})
+   */
     private $prix;
 
     public function __construct()
