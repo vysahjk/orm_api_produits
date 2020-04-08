@@ -6,9 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
  * @ApiResource()
+ * @ApiFilter(RangeFilter::class, properties={"prix"})
+ * @ApiFilter(SearchFilter::class, properties={"nom": "ipartial"})
  * @ORM\Entity(repositoryClass="App\Repository\ProduitRepository")
  */
 class Produit extends AbstractEntity
@@ -23,7 +28,7 @@ class Produit extends AbstractEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Nom;
+    private $nom;
 
     /**
      * @ORM\Column(type="text")
@@ -34,6 +39,11 @@ class Produit extends AbstractEntity
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="produits")
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $prix;
 
     public function __construct()
     {
@@ -47,12 +57,12 @@ class Produit extends AbstractEntity
 
     public function getNom(): ?string
     {
-        return $this->Nom;
+        return $this->nom;
     }
 
-    public function setNom(string $Nom): self
+    public function setNom(string $nom): self
     {
-        $this->Nom = $Nom;
+        $this->nom = $nom;
 
         return $this;
     }
@@ -91,6 +101,18 @@ class Produit extends AbstractEntity
         if ($this->category->contains($category)) {
             $this->category->removeElement($category);
         }
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(float $prix): self
+    {
+        $this->prix = $prix;
 
         return $this;
     }
